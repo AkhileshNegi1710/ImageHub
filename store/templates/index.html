@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{%block content%}
+
+
+<!--template load cart-->
+{%load cart%}
+{%load custom_filter%}
+<!-- body -->
+<div class="container-fluid mt-3">
+<div class="row">
+<!-- filter -->
+<div class="col-lg-3">
+<!-- .div bootstrap list-a -->
+<div class="list-group">
+<!--same page and url-->
+<a href="/" class="list-group-item list-group-item-action">All Images</a>
+    {% for cati in catdict %}
+<!--/ means same url on reload and ? is method for query string-->
+<a href="/?categoryid={{cati.id}}" class="list-group-item list-group-item-action">{{cati.name}}</a>
+
+{%endfor%}
+</div>
+</div>
+
+
+                  <!-- All Images -->
+
+<div id="images" class="col-lg-9 mx-auto">
+<div class="row mx-auto">
+{% for i in prodict %}
+<div class="card mx-auto mb-3" id="{{i.id}}" style="width: 18rem;">
+    <img src="{{i.image.url}}" class="card-img-top" alt="...">
+<div class="card-body">
+    <h5 class="card-title">{{i.name}}</h5>
+    <p class="card-text">{{i.description}}</p>
+    <p class="card-text"><b>{{i.price|currency}}</b></p>
+
+
+</div>
+  <!--footer-->
+
+<!--no gutters remove backgound shades and p-0 is padding 0-->
+  <div class="card-footer p-0 no-gutters">
+      <!--no space between  & i is variable in is_in_cart filter where request.session.cart is string arguments-->
+    <!--  - decrement-->
+      {%if i|is_in_cart:request.session.cart %}
+<div class="row no-gutters">
+
+    <form action="/#{{i.id}}" method="POST" class="col-2">
+    {%csrf_token%}
+   <input hidden type="text" value="{{i.id}}" name="imageid">
+   <input hidden type="text" value="True" name="remove">
+
+    <input type="submit" value="-" class="btn btn-block btn-secondary">
+    </form>
+
+
+      <!--+ increment-->
+      <div class="text-center col">{{i|cart_quantity:request.session.cart}}</div>
+    <form action="/" method="POST" class="col-2">
+    {%csrf_token%}
+   <input hidden type="text" value="{{i.id}}" name="imageid">
+
+    <input type="submit" value="+" class="btn btn-block btn-secondary">
+    </form>
+</div>
+{%else%}
+<!-- # meaning same location -->
+  <form action="/#{{i.id}}" method="POST" class="btn-block">
+        {% csrf_token %}
+      <input hidden type="text" value="{{i.id}}" name="imageid">
+      <button href="#" type="submit" class="float-right btn btn-light form-control">Add to Cart</button>
+  </form>
+{%endif%}
+</div>
+</div>
+{%endfor%}
+</div>
+</div>
+</div>
+</div>
+
+  {%endblock%}

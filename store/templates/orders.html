@@ -1,0 +1,43 @@
+{%extends "base.html"%}
+{%block content%}
+{%load cart%}
+<!--to cart.py-->
+
+{%load custom_filter%}
+<!--to load currency-->
+
+<div class="container">
+<div class="border rounded p-4 m-4">
+    <p class="display-4 pl-4 ml-4">View Orders</p>
+    <hr>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+{%for i in cart%}
+            <tr>
+                <!--forloopcounter is used to print list 1,2,3,4-->
+                <td>{{forloop.counter}}</td>
+                <td><img style="height:80px; width:150px" class="rounded-circle"  src="{{i.productname.image.url}}"></td>
+                <td>{{i.productname.name}}</td>
+                <td>{{i.price|currency}}</td>
+                <td>{{i.quantity}}</td>
+<td>{{i.quantity|multiply:i.price}}</td>
+            </tr>
+{%endfor%}
+        </tbody>
+  </table>
+</div>
+</div>
+
+
+{%endblock%}
